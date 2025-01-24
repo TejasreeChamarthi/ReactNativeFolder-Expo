@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -7,14 +8,21 @@ export default function Login({ navigation }) {
 
   const handleLogin = () => {
     // Perform login logic here
-    if (email === "test@example.com" && password === "password") {
+    // if (email === "test@example.com" && password === "password") {
       navigation.navigate("Home");
-    } else {
-      alert("Invalid credentials");
-    }
+    // } else {
+      // alert("Invalid credentials");
+  // }
   };
 
   return (
+    <LinearGradient
+          colors={["#C73481", "#E5374E"]}
+          locations={[0, 0.5]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.container}
+        >
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Login</Text>
@@ -42,6 +50,7 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
+    </LinearGradient>
   );
 }
 
@@ -50,11 +59,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#E5E7EB",
+    
   },
   card: {
-    width: "80%",
-    maxWidth: 400,
+    width: 350, 
+    maxWidth: 400, 
     backgroundColor: "#FFFFFF",
     padding: 24,
     borderRadius: 16,
@@ -69,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center",
     marginBottom: 24,
-    color: "#4F46E5",
+    color: "#000000",
   },
   input: {
     width: "100%",
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     padding: 16,
-    backgroundColor: "#4F46E5",
+    backgroundColor: "#85459B",
     borderRadius: 12,
     alignItems: "center",
   },

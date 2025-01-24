@@ -61,7 +61,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false, // Hide the default header for all screens
+          headerShown: false, 
         }}
       >
         <Stack.Screen name="Login" component={Login} />

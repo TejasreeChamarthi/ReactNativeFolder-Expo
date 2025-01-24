@@ -1,40 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Home({ navigation }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const handleMenu = () => {
-    // Open menu logic here, e.g. navigate to another screen
-    alert("Menu clicked!");
+    setMenuOpen(!menuOpen); 
+  };
+
+  const handleLogout = () => {
+    navigation.navigate("Login"); 
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={["#C73481", "#E5374E"]}
+      locations={[0, 0.5]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.container}
+    >
+      <View style={styles.menu}>
+        {menuOpen && (
+          <>
+            <Text style={styles.menuContent}>Profile</Text>
+            <Text style={styles.menuContent}>Chatbox</Text>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text style={styles.menuContent}>Logout</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+
       <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuText}>☰</Text>
       </TouchableOpacity>
-      
+
       <View style={styles.content}>
-        <Text style={styles.heading}>Welcome to the Home Page!</Text>
-        <TouchableOpacity style={styles.button} onPress={() => alert("Button Pressed!")}>
+        <Text style={styles.heading}>Good Morning!</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => alert("Button Pressed!")}
+        >
           <Text style={styles.buttonText}>Click Me</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
     justifyContent: "center",
     alignItems: "center",
   },
+  menu: {
+    position: "absolute",
+    left: 0,
+    top: 90,
+    bottom: 0,
+    zIndex: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+  },
+  menuContent: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    marginBottom: 20,
+    marginTop: 20,
+  },
   menuButton: {
     position: "absolute",
-    top: 20,
-    left: 20,
-    backgroundColor: "#4F46E5",
+    top: 40,
+    left: 10,
     padding: 12,
     borderRadius: 50,
     shadowColor: "#000",
@@ -42,6 +82,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
+    zIndex: 2,
   },
   menuText: {
     color: "#FFFFFF",
@@ -55,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
     marginBottom: 20,
-    color: "#4F46E5",
+    color: "#ffffff",
   },
   button: {
     backgroundColor: "#4F46E5",
