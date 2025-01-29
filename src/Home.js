@@ -1,16 +1,38 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import * as DocumentPicker from "expo-document-picker";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Home({ navigation }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const handleMenu = () => {
-    setMenuOpen(!menuOpen); 
+  const handleMenu = () => setMenuOpen(!menuOpen);
+  const handleLogout = () => navigation.navigate("Login");
+
+  const handleFileSelect = async () => {
+    if (Platform.OS === "web") {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "*/*";
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          setSelectedFiles([...selectedFiles, file]);
+        }
+      };
+      input.click();
+    } else {
+      const result = await DocumentPicker.getDocumentAsync({ type: "*/*" });
+      if (result.assets && result.assets.length > 0) {
+        setSelectedFiles([...selectedFiles, result.assets[0]]);
+      }
+    }
   };
 
-  const handleLogout = () => {
-    navigation.navigate("Login"); 
+  const handleFileRemove = (index) => {
+    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
   };
 
   return (
@@ -39,12 +61,31 @@ export default function Home({ navigation }) {
 
       <View style={styles.content}>
         <Text style={styles.heading}>Good Morning!</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => alert("Button Pressed!")}
-        >
-          <Text style={styles.buttonText}>Click Me</Text>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={handleFileSelect} 
+          disabled={selectedFiles.length > 0}>
+          <Text style={styles.buttonText}>Select Files</Text>
+          <Ionicons 
+            name="cloud-upload-outline" 
+            size={24} 
+            color={selectedFiles.length > 0 ? "#FFFFFF" : "#888888"} 
+            style={styles.uploadIcon} 
+          />
         </TouchableOpacity>
+
+        {selectedFiles.length > 0 && (
+          <View style={styles.fileList}>
+            {selectedFiles.map((file, index) => (
+              <View key={index} style={styles.fileItem}>
+                <Text style={styles.fileName}>{file.name}</Text>
+                <TouchableOpacity onPress={() => handleFileRemove(index)}>
+                  <Ionicons name="close-circle" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
       </View>
     </LinearGradient>
   );
@@ -99,15 +140,32 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   button: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#4F46E5",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 12,
-    alignItems: "center",
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
+  },
+  uploadIcon: {
+    marginLeft: 10,
+  },
+  fileList: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  fileItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  fileName: {
+    color: "#FFFFFF",
+    marginRight: 10,
   },
 });
